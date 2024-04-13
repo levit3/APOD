@@ -1,11 +1,11 @@
-require("dotenv").config();
+// require("dotenv").config();
 //we initialize every variable that we will use later on
 const header = document.getElementById("dateHeader");
 const title = document.getElementById("title");
 const potd = document.getElementById("potd");
 const dateHeader = document.getElementById("dateHeader");
 const descriptionHeader = document.getElementById("descriptionHeader");
-const container = document.getElementById("explanation");
+const explanationContainer = document.getElementById("explanation");
 const form = document.getElementById("dateSearch");
 const dateInput = form.dateInput;
 let date = null;
@@ -13,6 +13,7 @@ const explanation = document.createElement("p");
 const nextDay = document.getElementById("next");
 const prevDay = document.getElementById("previous");
 const notFound = document.getElementById("notFound");
+const historyHeader = document.getElementById("historyHeader");
 
 //we get the current date
 const currentDate = new Date();
@@ -27,8 +28,10 @@ const dateHistoryList = document.getElementById("dateHistoryList");
 const dateHistoryContainer = document.querySelector(".dateHistory");
 
 //we fetch data from the server
-const apiKey = process.env.API_KEY;
-fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`)
+// const apiKey = process.env.API_KEY;
+fetch(
+  `https://api.nasa.gov/planetary/apod?api_key=4ucYmBRjTLylUm0NrRpR5VCFPyetItgFep4hWuAh`
+)
   .then((res) => res.json())
   .then((data) => renderData(data)) //we pass on the data to the render function in order to render it to the DOM
   .catch((error) => console.error(error.message)); //we catch any error messages in the console
@@ -39,7 +42,7 @@ function renderData(data) {
   date = data.date;
   dateHeader.innerText = data.date;
   explanation.innerText = data.explanation;
-  container.appendChild(explanation);
+  explanationContainer.appendChild(explanation);
   potd.innerHTML = `
     <img id="image" src="${data.url}" alt="${data.title}"/>
     `;
@@ -57,7 +60,7 @@ function renderData(data) {
   //we remove the disabled and hidden attributes in case the user had gone a day further than the current date
   nextDay.removeAttribute("disabled");
   notFound.setAttribute("hidden", true);
-  container.removeAttribute("hidden");
+  explanationContainer.removeAttribute("hidden");
 
   let newDate = data.date; //we assign the current date to the variable newDate
   //we check if the current date is already in the array to avoid repetition
@@ -65,12 +68,12 @@ function renderData(data) {
     dateHistoryArray.push(newDate); //if the current date is not in the array then it is added
     const historyContainer = document.createElement("div");
     //we populate the history container with a date and a remove button
-    container.innerHTML = `<span style="display:inline-block"><li class="listItem">${newDate}</li></span> <span style = "display:inline-block"><button class = "listDelButton">x</button></span>`;
+    historyContainer.innerHTML = `<span style="display:inline-block"><li class="listItem">${newDate}</li></span> <span style = "display:inline-block"><button class = "listDelButton">x</button></span>`;
     //we append the container to the history list container element
     dateHistoryList.appendChild(historyContainer);
-    const delButton = container.querySelector(".listDelButton");
+    const delButton = historyContainer.querySelector(".listDelButton");
     delButton.addEventListener("click", removeDate); //we immediately add an event listener to the button and pass it on to the remove date function
-    let listItem = container.querySelector(".listItem");
+    let listItem = historyContainer.querySelector(".listItem");
     listItem.style.cursor = "pointer";
     listItem.addEventListener("click", renderListItem); //we immediately add an event listener that will show the data of the date clicked
   }
@@ -243,7 +246,9 @@ function handlePrevDay() {
 
 //we fetch the data from the current date variable and pass it on to the renderData function for it to be displayed on the DOM
 function fetchDate(date) {
-  fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${date}`)
+  fetch(
+    `https://api.nasa.gov/planetary/apod?api_key=4ucYmBRjTLylUm0NrRpR5VCFPyetItgFep4hWuAh&date=${date}`
+  )
     .then((res) => res.json())
     .then((dateData) => renderData(dateData))
     .catch((error) => console.error(error.message));
@@ -258,7 +263,7 @@ function tomorrow() {
   document.body.style.backgroundColor = "darkgrey";
   title.innerText = "";
   dateHeader.innerText = "";
-  container.setAttribute("hidden", true);
+  explanationContainer.setAttribute("hidden", true);
   //renders the page not found gif onto the page
   potd.innerHTML = `<img id="image" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmljMWgzeWV4Nnp1eGs4a3M0NDFzMmhpc2xzNXpuMzJxNWV2YXNpaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/j3KEAyVwci7GPtOVNv/giphy.gif" width="400" height="400" alt="404 error"/>`;
   //we center the image onto the center of the page
