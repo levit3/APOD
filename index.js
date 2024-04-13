@@ -15,3 +15,25 @@ fetch(`https://api.nasa.gov/planetary/apod?api_key=apiKey`)
   .then((res) => res.json())
   .then((data) => renderData(data)) //we pass on the data to the render function in order to render it to the DOM
   .catch((error) => console.error(error.message)); //we catch any error messages in the console
+
+//we create a function that renders the data to the webpage
+function renderData(data) {
+  title.innerText = data.title;
+  date = data.date;
+  dateHeader.innerText = data.date;
+  explanation.innerText = data.explanation;
+  container.appendChild(explanation);
+  potd.innerHTML = `
+    <img id="image" src="${data.url}" alt="${data.title}"/>
+    `;
+  const image = document.getElementById("image");
+  //we style the image so that its at the center of the page
+  image.style.position = "absolute";
+  image.style.left = "0";
+  image.style.right = "0";
+  image.style.top = "0";
+  image.style.bottom = "0";
+  image.style.margin = "auto";
+  image.style.maxWidth = "100%";
+  image.style.maxHeight = "73%";
+}
