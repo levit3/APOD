@@ -96,12 +96,12 @@ form.addEventListener("submit", (event) => {
   date = dateInput.value;
   if (
     //we ensure that the date inputted is not greater than the current date
-    parseInt(date.split("-")[0]) > parseInt(current.split("-")[0]) ||
-    (parseInt(date.split("-")[1]) === parseInt(current.split("-")[1]) &&
-      parseInt(date.split("-")[0]) > parseInt(current.split("-")[0])) ||
-    (parseInt(date.split("-")[2]) > parseInt(current.split("-")[2]) &&
-      parseInt(date.split("-")[1]) === parseInt(current.split("-")[1]) &&
-      parseInt(date.split("-")[0]) === parseInt(current.split("-")[0]))
+    parseInt(date.split("-")[0]) > parseInt(dateToday.split("-")[0]) ||
+    (parseInt(date.split("-")[1]) === parseInt(dateToday.split("-")[1]) &&
+      parseInt(date.split("-")[0]) > parseInt(dateToday.split("-")[0])) ||
+    (parseInt(date.split("-")[2]) > parseInt(dateToday.split("-")[2]) &&
+      parseInt(date.split("-")[1]) === parseInt(dateToday.split("-")[1]) &&
+      parseInt(date.split("-")[0]) === parseInt(dateToday.split("-")[0]))
   ) {
     date = dateHistoryArray.slice([-1]).join(""); //ensures that the previous button will return the user to where he was before the invalid date
     tomorrow();
