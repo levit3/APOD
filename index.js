@@ -8,9 +8,18 @@ const descriptionHeader = document.getElementById("descriptionHeader");
 const container = document.getElementById("explanation");
 const form = document.getElementById("dateSearch");
 const dateInput = form.dateInput;
-
+let date = null;
+const explanation = document.createElement("p");
 const nextDay = document.getElementById("next");
 const prevDay = document.getElementById("previous");
+const notFound = document.getElementById("notFound");
+
+//we get the current date
+const currentDate = new Date();
+let day = currentDate.getDate();
+let month = currentDate.getMonth() + 1;
+let year = currentDate.getFullYear();
+let dateToday = `${year}-0${month}-${day}`;
 
 //we fetch data from the server
 const apiKey = process.env.API_KEY;
@@ -48,7 +57,7 @@ form.addEventListener("submit", (event) => {
     .then((res) => res.json())
     .then((dateData) => renderData(dateData)) //we pass the data from the search to the renderData function to be rendered to the DOM
     .catch((error) => console.error(error.message));
-  form.reset();
+  form.reset(); //we reset the form to clear anything that had been previously entered
 });
 
 nextDay.addEventListener("click", handleNextDay);
@@ -122,7 +131,7 @@ function handleNextDay() {
     dateArray[2] = "01"; //changes date to first day of the year
     date = dateArray.join("-");
     fetchNextDate(date);
-  } else if (dateArray.join("-") === current) {
+  } else if (dateArray.join("-") === dateToday) {
     tomorrow(); //function to show it cannot render date in the future
   } else {
     let x = parseInt(dateArray[2]) + 1; //adds 1 to the date to show data of the next day
@@ -194,4 +203,12 @@ function handlePrevDay() {
   }
   // Calls the function to fetch data of a date
   fetchNextDate(date);
+}
+
+//we fetch the data from the date and pass it on to the renderData function for it to be displayed on the DOM
+function fetchNextDate(date) {
+  fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}=${date}`)
+    .then((res) => res.json())
+    .then((dateData) => renderData(dateData))
+    .catch((error) => console.error(error.message));
 }
