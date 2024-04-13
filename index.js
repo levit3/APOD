@@ -71,6 +71,7 @@ function renderData(data) {
     const delButton = container.querySelector(".listDelButton");
     delButton.addEventListener("click", removeDate); //we immediately add an event listener to the button and pass it on to the remove date function
     let listItem = container.querySelector(".listItem");
+    listItem.style.cursor = "pointer";
     listItem.addEventListener("click", renderListItem); //we immediately add an event listener that will show the data of the date clicked
   }
 }
@@ -275,3 +276,17 @@ function removeDate(event) {
 function renderListItem(event) {
   fetchDate(event.target.innerText);
 }
+
+//we hide the history container until when clicked for a cleaner page
+historyHeader.addEventListener("click", (event) => {
+  if (dateHistoryContainer.hasAttribute("hidden")) {
+    dateHistoryContainer.removeAttribute("hidden");
+  } else {
+    dateHistoryContainer.setAttribute("hidden", true);
+  }
+});
+
+//we change the cursor style to show a pointer
+nextDay.style.cursor = "pointer";
+prevDay.style.cursor = "pointer";
+historyHeader.style.cursor = "pointer";
