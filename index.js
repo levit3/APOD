@@ -107,8 +107,8 @@ form.addEventListener("submit", (event) => {
     tomorrow();
   } else {
     fetchDate(date); //pass it on to the function that will get the date data from the api
-    form.reset(); //we reset the form to clear anything that had been previously entered
   }
+  form.reset(); //we reset the form to clear anything that had been previously entered
 });
 
 nextDay.addEventListener("click", handleNextDay);
