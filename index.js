@@ -14,6 +14,7 @@ const nextDay = document.getElementById("next");
 const prevDay = document.getElementById("previous");
 const notFound = document.getElementById("notFound");
 const historyHeader = document.getElementById("historyHeader");
+const backgroundImage = document.createElement("div"); //we create a container where we can store the background image
 
 //we get the current date
 const currentDate = new Date();
@@ -56,6 +57,17 @@ function renderData(data) {
   image.style.margin = "auto";
   image.style.maxWidth = "100%";
   image.style.maxHeight = "73%";
+
+  //we style the body so that it has the image as the background image and ensure it is blurred
+  backgroundImage.style.backgroundImage = `url(${data.url})`;
+  backgroundImage.style.position = "absolute";
+  backgroundImage.style.top = "0"; //ensure the image is pinned to the top
+  backgroundImage.style.left = "0"; //ensure the image is pinned to the left
+  backgroundImage.style.width = "100%";
+  backgroundImage.style.height = "100%";
+  backgroundImage.style.zIndex = "-1"; //we ensure the div is behind all other elements
+  backgroundImage.style.filter = "blur(60px)"; //we apply a blur effect to the background
+  document.body.appendChild(backgroundImage);
 
   //we remove the disabled and hidden attributes in case the user had gone a day further than the current date
   nextDay.removeAttribute("disabled");
