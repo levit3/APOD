@@ -79,8 +79,21 @@ function renderData(data) {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   date = dateInput.value;
-  fetchDate(date); //pass it on to the function that will get the date data from the api
-  form.reset(); //we reset the form to clear anything that had been previously entered
+  if (
+    //we ensure that the date inputted is not greater than the current date
+    parseInt(date.split("-")[0]) > parseInt(current.split("-")[0]) ||
+    (parseInt(date.split("-")[1]) === parseInt(current.split("-")[1]) &&
+      parseInt(date.split("-")[0]) > parseInt(current.split("-")[0])) ||
+    (parseInt(date.split("-")[2]) > parseInt(current.split("-")[2]) &&
+      parseInt(date.split("-")[1]) === parseInt(current.split("-")[1]) &&
+      parseInt(date.split("-")[0]) === parseInt(current.split("-")[0]))
+  ) {
+    date = dateHistoryArray.slice([-1]).join(""); //ensures that the previous button will return the user to where he was before the invalid date
+    tomorrow();
+  } else {
+    fetchDate(date); //pass it on to the function that will get the date data from the api
+    form.reset(); //we reset the form to clear anything that had been previously entered
+  }
 });
 
 nextDay.addEventListener("click", handleNextDay);
@@ -240,6 +253,7 @@ function fetchDate(date) {
 function tomorrow() {
   //we remove all the content from the webpage
   notFound.removeAttribute("hidden"); //removes the hidden attribute to show the content on the DOM
+  nextDay.setAttribute("disabled", true); //we disable the next button to prevent the user from going forward further
   backgroundImage.style.backgroundImage = "";
   document.body.style.backgroundColor = "darkgrey";
   title.innerText = "";
@@ -261,7 +275,6 @@ function tomorrow() {
   let x = parseInt(dateArray[2]) + 1;
   dateArray[2] = x.toString();
   date = dateArray.join("-");
-  nextDay.setAttribute("disabled", true); //we disable the next button to prevent the user from going forward further
 }
 
 //we create a delete function that removes the whole date element from the History container and array
