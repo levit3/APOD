@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta
+      charset="utf-8"
+      <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Astronomical Picture of the Day</title>
+  </head>
+  <body>
+    <h2 id="dateHeader"></h2>
+    <h1 id="title"></h1>
+    <div id="search">
+      <form id="dateSearch">
+        <input type="text" id="dateInput" placeholder="YYYY-MM-DD" />
+        <button type="submit" id="submit">Search</button>
+      </form>
+    </div>
+
+    <div id="centerPage">
+      <div id="potd"></div>
+      <div class="button">
+        <button id="next">Next</button>
+        <button id="previous">Previous</button>
+      </div>
+    </div>
+
+    <div id="container">
+      <div id="explanation">
+        <h4 id="descriptionHeader">Explanation</h4>
+      </div>
+    </div>
+  </body>
+  <script src="index.js"></script>
+</html>
