@@ -9,6 +9,9 @@ const container = document.getElementById("explanation");
 const form = document.getElementById("dateSearch");
 const dateInput = form.dateInput;
 
+const nextDay = document.getElementById("next");
+const prevDay = document.getElementById("previous");
+
 //we fetch data from the server
 const apiKey = process.env.API_KEY;
 fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`)
@@ -47,3 +50,139 @@ form.addEventListener("submit", (event) => {
     .catch((error) => console.error(error.message));
   form.reset();
 });
+
+nextDay.addEventListener("click", handleNextDay);
+prevDay.addEventListener("click", handlePrevDay);
+
+function handleNextDay() {
+  let dateArray = date.split("-");
+  if (
+    //checks for months that have 31 days
+    (dateArray[2] === "31" && dateArray[1] === "01") ||
+    (dateArray[2] === "31" && dateArray[1] === "03") ||
+    (dateArray[2] === "31" && dateArray[1] === "05") ||
+    (dateArray[2] === "31" && dateArray[1] === "07") ||
+    (dateArray[2] === "31" && dateArray[1] === "08") ||
+    (dateArray[2] === "31" && dateArray[1] === "10")
+  ) {
+    let x = parseInt(dateArray[1]) + 1; //changes to the next month
+    dateArray[1] = `0${x.toString()}`;
+    dateArray[2] = "01"; //changes day to first of the month
+    date = dateArray.join("-");
+    fetchNextDate(date);
+  } else if (
+    //checks for months that have 30 days
+    (dateArray[2] === "30" && dateArray[1] === "04") ||
+    (dateArray[2] === "30" && dateArray[1] === "06") ||
+    (dateArray[2] === "30" && dateArray[1] === "09") ||
+    (dateArray[2] === "30" && dateArray[1] === "11")
+  ) {
+    let x = parseInt(dateArray[1]) + 1;
+    dateArray[1] = `0${x.toString()}`;
+    dateArray[2] = "01"; //changes day to first of the month
+    date = dateArray.join("-");
+    fetchNextDate(date);
+  } else if (
+    //checks if the month is february and if it is a leap year
+    dateArray[1] === "02" &&
+    dateArray[2] === "29" &&
+    dateArray[0] % 4 === 0
+  ) {
+    dateArray[1] = "03";
+    dateArray[2] = "01"; //changes date to first of march
+    date = dateArray.join("-");
+    fetchNextDate(date);
+  } else if (
+    //checks if the month is february and if it not a leap year
+    dateArray[1] === "02" &&
+    dateArray[2] === "28" &&
+    dateArray[0] % 4 !== 0
+  ) {
+    dateArray[1] = "03";
+    dateArray[2] = "01"; //changes the date to the first of March
+    date = dateArray.join("-");
+    fetchNextDate(date);
+  } else if (
+    //checks if it is the end of the year
+    dateArray[2] === "31" &&
+    dateArray[1] === "12"
+  ) {
+    let x = parseInt(dateArray[0]) + 1; //changes to the next year
+    dateArray[0] = x.toString();
+    dateArray[1] = "01";
+    dateArray[2] = "01"; //changes date to first day of the year
+    date = dateArray.join("-");
+    fetchNextDate(date);
+  } else if (dateArray.join("-") === current) {
+    tomorrow(); //function to show it cannot render date in the future
+  } else {
+    let x = parseInt(dateArray[2]) + 1; //adds 1 to the date to show data of the next day
+    dateArray[2] = x.toString();
+    date = dateArray.join("-");
+    fetchNextDate(date);
+  }
+}
+function handlePrevDay() {
+  let dateArray = date.split("-");
+  // checks if previous month has 31 days
+  if (
+    (dateArray[2] === "01" && dateArray[1] === "04") ||
+    (dateArray[2] === "01" && dateArray[1] === "06") ||
+    (dateArray[2] === "01" && dateArray[1] === "08") ||
+    (dateArray[2] === "01" && dateArray[1] === "09") ||
+    (dateArray[2] === "01" && dateArray[1] === "11")
+  ) {
+    let x = parseInt(dateArray[1]) - 1;
+    dateArray[1] = `0${x.toString()}`;
+    dateArray[2] = "31";
+    date = dateArray.join("-");
+  }
+  // Checks if previous month has 30 days
+  else if (
+    (dateArray[2] === "01" && dateArray[1] === "02") ||
+    (dateArray[2] === "01" && dateArray[1] === "07") ||
+    (dateArray[2] === "01" && dateArray[1] === "10") ||
+    (dateArray[2] === "01" && dateArray[1] === "12")
+  ) {
+    let x = parseInt(dateArray[1]) - 1;
+    dateArray[1] = `0${x.toString()}`;
+    dateArray[2] = "30";
+    date = dateArray.join("-");
+  }
+  // Checks if the previous month is February and it's a leap year
+  else if (
+    dateArray[1] === "03" &&
+    dateArray[2] === "01" &&
+    dateArray[0] % 4 === 0
+  ) {
+    dateArray[1] = "02";
+    dateArray[2] = "29";
+    date = dateArray.join("-");
+  }
+  // Checks if the previous month is February and it's not a leap year
+  else if (
+    dateArray[1] === "03" &&
+    dateArray[2] === "01" &&
+    dateArray[0] % 4 !== 0
+  ) {
+    dateArray[1] = "02";
+    dateArray[2] = "28";
+    date = dateArray.join("-");
+  }
+  // Checks if its the last day of the year
+  else if (dateArray[2] === "01" && dateArray[1] === "01") {
+    let x = parseInt(dateArray[0]) - 1;
+    dateArray[0] = x.toString();
+    dateArray[1] = "12";
+    dateArray[2] = "31";
+    date = dateArray.join("-");
+  }
+  // For all other cases, decrease the day by 1
+  else {
+    let x = parseInt(dateArray[2]) - 1;
+    dateArray[2] = x.toString();
+    date = dateArray.join("-");
+  }
+  // Calls the function to fetch data of a date
+  fetchNextDate(date);
+}
