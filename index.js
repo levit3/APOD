@@ -54,6 +54,15 @@ form.addEventListener("submit", (event) => {
 nextDay.addEventListener("click", handleNextDay);
 prevDay.addEventListener("click", handlePrevDay);
 
+//adds event listeners for when the right or left arrow button is clicked
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowLeft") {
+    handlePrevDay(); //passes function that renders the previous date when left arrow is clicked
+  } else if (event.key === "ArrowRight") {
+    handleNextDay(); //passes function that renders the next date when the right arrow is clicked
+  }
+});
+
 function handleNextDay() {
   let dateArray = date.split("-");
   if (
