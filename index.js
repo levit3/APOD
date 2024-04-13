@@ -70,6 +70,8 @@ function renderData(data) {
     dateHistoryList.appendChild(historyContainer);
     const delButton = container.querySelector(".listDelButton");
     delButton.addEventListener("click", removeDate); //we immediately add an event listener to the button and pass it on to the remove date function
+    let listItem = container.querySelector(".listItem");
+    listItem.addEventListener("click", renderListItem); //we immediately add an event listener that will show the data of the date clicked
   }
 }
 //we add an event listener to the form for when a date is searched and submitted
@@ -267,4 +269,9 @@ function removeDate(event) {
   const index = dateHistoryArray.indexOf(value); //we find the index of the date to be deleted in the array
   dateHistoryArray.splice(index, 1); //we remove the date from the array
   event.target.parentNode.parentNode.remove(); //we remove the entire element that hold the date and delete button
+}
+
+//we create a function that passes on the event's target value to be rendered
+function renderListItem(event) {
+  fetchDate(event.target.innerText);
 }
