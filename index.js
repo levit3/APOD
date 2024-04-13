@@ -11,7 +11,7 @@ const dateInput = form.dateInput;
 
 //we fetch data from the server
 const apiKey = process.env.API_KEY;
-fetch(`https://api.nasa.gov/planetary/apod?api_key=apiKey`)
+fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`)
   .then((res) => res.json())
   .then((data) => renderData(data)) //we pass on the data to the render function in order to render it to the DOM
   .catch((error) => console.error(error.message)); //we catch any error messages in the console
@@ -37,3 +37,13 @@ function renderData(data) {
   image.style.maxWidth = "100%";
   image.style.maxHeight = "73%";
 }
+//we add an event listener to the form for when a date is searched and submitted
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  date = dateInput.value;
+  fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${date}`)
+    .then((res) => res.json())
+    .then((dateData) => renderData(dateData)) //we pass the data from the search to the renderData function to be rendered to the DOM
+    .catch((error) => console.error(error.message));
+  form.reset();
+});
