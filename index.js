@@ -21,6 +21,11 @@ let month = currentDate.getMonth() + 1;
 let year = currentDate.getFullYear();
 let dateToday = `${year}-0${month}-${day}`;
 
+//initializes history variables
+const dateHistoryArray = [];
+const dateHistoryList = document.getElementById("dateHistoryList");
+const dateHistoryContainer = document.querySelector(".dateHistory");
+
 //we fetch data from the server
 const apiKey = process.env.API_KEY;
 fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`)
@@ -53,15 +58,23 @@ function renderData(data) {
   nextDay.removeAttribute("disabled");
   notFound.setAttribute("hidden", true);
   container.removeAttribute("hidden");
+
+  let newDate = data.date; //we assign the current date to the variable newDate
+  //we check if the current date is already in the array to avoid repetition
+  if (dateHistoryArray.indexOf(newDate) === -1) {
+    dateHistoryArray.push(newDate); //if the current date is not in the array then it is added
+    const historyContainer = document.createElement("div");
+    //we populate the history container with a date and a remove button
+    container.innerHTML = `<span style="display:inline-block"><li class="listItem">${newDate}</li></span> <span style = "display:inline-block"><button class = "listDelButton">x</button></span>`;
+    //we append the container to the history list container element
+    dateHistoryList.appendChild(historyContainer);
+  }
 }
 //we add an event listener to the form for when a date is searched and submitted
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   date = dateInput.value;
-  fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${date}`)
-    .then((res) => res.json())
-    .then((dateData) => renderData(dateData)) //we pass the data from the search to the renderData function to be rendered to the DOM
-    .catch((error) => console.error(error.message));
+  fetchDate(date); //pass it on to the function that will get the date data from the api
   form.reset(); //we reset the form to clear anything that had been previously entered
 });
 
@@ -92,7 +105,7 @@ function handleNextDay() {
     dateArray[1] = `0${x.toString()}`;
     dateArray[2] = "01"; //changes day to first of the month
     date = dateArray.join("-");
-    fetchNextDate(date);
+    fetchDate(date);
   } else if (
     //checks for months that have 30 days
     (dateArray[2] === "30" && dateArray[1] === "04") ||
@@ -104,7 +117,7 @@ function handleNextDay() {
     dateArray[1] = `0${x.toString()}`;
     dateArray[2] = "01"; //changes day to first of the month
     date = dateArray.join("-");
-    fetchNextDate(date);
+    fetchDate(date);
   } else if (
     //checks if the month is february and if it is a leap year
     dateArray[1] === "02" &&
@@ -114,7 +127,7 @@ function handleNextDay() {
     dateArray[1] = "03";
     dateArray[2] = "01"; //changes date to first of march
     date = dateArray.join("-");
-    fetchNextDate(date);
+    fetchDate(date);
   } else if (
     //checks if the month is february and if it not a leap year
     dateArray[1] === "02" &&
@@ -124,7 +137,7 @@ function handleNextDay() {
     dateArray[1] = "03";
     dateArray[2] = "01"; //changes the date to the first of March
     date = dateArray.join("-");
-    fetchNextDate(date);
+    fetchDate(date);
   } else if (
     //checks if it is the end of the year
     dateArray[2] === "31" &&
@@ -135,14 +148,14 @@ function handleNextDay() {
     dateArray[1] = "01";
     dateArray[2] = "01"; //changes date to first day of the year
     date = dateArray.join("-");
-    fetchNextDate(date);
+    fetchDate(date);
   } else if (dateArray.join("-") === dateToday) {
     tomorrow(); //function to show it cannot render date in the future
   } else {
     let x = parseInt(dateArray[2]) + 1; //adds 1 to the date to show data of the next day
     dateArray[2] = x.toString();
     date = dateArray.join("-");
-    fetchNextDate(date);
+    fetchDate(date);
   }
 }
 function handlePrevDay() {
@@ -207,12 +220,12 @@ function handlePrevDay() {
     date = dateArray.join("-");
   }
   // Calls the function to fetch data of a date
-  fetchNextDate(date);
+  fetchDate(date);
 }
 
-//we fetch the data from the date and pass it on to the renderData function for it to be displayed on the DOM
-function fetchNextDate(date) {
-  fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}=${date}`)
+//we fetch the data from the current date variable and pass it on to the renderData function for it to be displayed on the DOM
+function fetchDate(date) {
+  fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${date}`)
     .then((res) => res.json())
     .then((dateData) => renderData(dateData))
     .catch((error) => console.error(error.message));
