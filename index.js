@@ -48,6 +48,11 @@ function renderData(data) {
   image.style.margin = "auto";
   image.style.maxWidth = "100%";
   image.style.maxHeight = "73%";
+
+  //we remove the disabled and hidden attributes in case the user had gone a day further than the current date
+  nextDay.removeAttribute("disabled");
+  notFound.setAttribute("hidden", true);
+  container.removeAttribute("hidden");
 }
 //we add an event listener to the form for when a date is searched and submitted
 form.addEventListener("submit", (event) => {
@@ -211,4 +216,32 @@ function fetchNextDate(date) {
     .then((res) => res.json())
     .then((dateData) => renderData(dateData))
     .catch((error) => console.error(error.message));
+}
+
+//function that renders a page not found error when the user tries to go to a date greater than the current date
+function tomorrow() {
+  //we remove all the content from the webpage
+  notFound.removeAttribute("hidden"); //removes the hidden attribute to show the content on the DOM
+  backgroundImage.style.backgroundImage = "";
+  document.body.style.backgroundColor = "darkgrey";
+  title.innerText = "";
+  dateHeader.innerText = "";
+  container.setAttribute("hidden", true);
+  //renders the page not found gif onto the page
+  potd.innerHTML = `<img id="image" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmljMWgzeWV4Nnp1eGs4a3M0NDFzMmhpc2xzNXpuMzJxNWV2YXNpaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/j3KEAyVwci7GPtOVNv/giphy.gif" width="400" height="400" alt="404 error"/>`;
+  //we center the image onto the center of the page
+  const image = document.getElementById("image");
+  image.style.margin = "auto";
+  image.style.position = "absolute";
+  image.style.left = "0";
+  image.style.right = "0";
+  image.style.marginTop = "85px";
+  notFound.innerHTML = `<h3><span style = "color:cornflowerblue; font-weight:800; font-size:35px">You seem lost</span></h3>
+  <h4><span style = "font-size:25px; font-weight:200">Calm down. It's not tomorrow yet</span></h4>`; //page not found error message
+  //we add a day to the date so as to ensure going back returns the user to the current date
+  let dateArray = date.split("-");
+  let x = parseInt(dateArray[2]) + 1;
+  dateArray[2] = x.toString();
+  date = dateArray.join("-");
+  nextDay.setAttribute("disabled", true); //we disable the next button to prevent the user from going forward further
 }
