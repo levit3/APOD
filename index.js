@@ -68,6 +68,8 @@ function renderData(data) {
     container.innerHTML = `<span style="display:inline-block"><li class="listItem">${newDate}</li></span> <span style = "display:inline-block"><button class = "listDelButton">x</button></span>`;
     //we append the container to the history list container element
     dateHistoryList.appendChild(historyContainer);
+    const delButton = container.querySelector(".listDelButton");
+    delButton.addEventListener("click", removeDate); //we immediately add an event listener to the button and pass it on to the remove date function
   }
 }
 //we add an event listener to the form for when a date is searched and submitted
@@ -257,4 +259,12 @@ function tomorrow() {
   dateArray[2] = x.toString();
   date = dateArray.join("-");
   nextDay.setAttribute("disabled", true); //we disable the next button to prevent the user from going forward further
+}
+
+//we create a delete function that removes the whole date element from the History container and array
+function removeDate(event) {
+  const value = event.target.parentNode.previousElementSibling.innerText; //we select the date that is to be deleted
+  const index = dateHistoryArray.indexOf(value); //we find the index of the date to be deleted in the array
+  dateHistoryArray.splice(index, 1); //we remove the date from the array
+  event.target.parentNode.parentNode.remove(); //we remove the entire element that hold the date and delete button
 }
