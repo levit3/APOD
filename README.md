@@ -42,6 +42,8 @@ npm i browserify -g
 browserify -t dotenvify -e index.js -o bundle.js
 ```
 5. The webpage is ready to run :+1:
+> [!Note]
+> Anytime you change the code in index.js, remember to run `browserify -t dotenvify -e index.js -o bundle.js` for the changes to apply.
 
 ## Technologies used
 - Github
