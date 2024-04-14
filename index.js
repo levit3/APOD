@@ -1,4 +1,4 @@
-// require("dotenv").config();
+require("dotenv").config();
 //we initialize every variable that we will use later on
 const header = document.getElementById("dateHeader");
 const title = document.getElementById("title");
@@ -29,10 +29,8 @@ const dateHistoryList = document.getElementById("dateHistoryList");
 const dateHistoryContainer = document.querySelector(".dateHistory");
 
 //we fetch data from the server
-// const apiKey = process.env.API_KEY;
-fetch(
-  `https://api.nasa.gov/planetary/apod?api_key=4ucYmBRjTLylUm0NrRpR5VCFPyetItgFep4hWuAh`
-)
+const apiKey = process.env.API_KEY;
+fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`)
   .then((res) => res.json())
   .then((data) => renderData(data)) //we pass on the data to the render function in order to render it to the DOM
   .catch((error) => console.error(error.message)); //we catch any error messages in the console
@@ -135,7 +133,7 @@ function handleNextDay() {
     (dateArray[2] === "31" && dateArray[1] === "10")
   ) {
     let x = parseInt(dateArray[1]) + 1; //changes to the next month
-    dateArray[1] = `0${x.toString()}`;
+    dateArray[1] = `${x.toString()}`;
     dateArray[2] = "01"; //changes day to first of the month
     date = dateArray.join("-");
     fetchDate(date);
@@ -147,7 +145,7 @@ function handleNextDay() {
     (dateArray[2] === "30" && dateArray[1] === "11")
   ) {
     let x = parseInt(dateArray[1]) + 1;
-    dateArray[1] = `0${x.toString()}`;
+    dateArray[1] = `${x.toString()}`;
     dateArray[2] = "01"; //changes day to first of the month
     date = dateArray.join("-");
     fetchDate(date);
@@ -202,7 +200,7 @@ function handlePrevDay() {
     (dateArray[2] === "01" && dateArray[1] === "11")
   ) {
     let x = parseInt(dateArray[1]) - 1;
-    dateArray[1] = `0${x.toString()}`;
+    dateArray[1] = `${x.toString()}`;
     dateArray[2] = "31";
     date = dateArray.join("-");
   }
@@ -214,7 +212,7 @@ function handlePrevDay() {
     (dateArray[2] === "01" && dateArray[1] === "12")
   ) {
     let x = parseInt(dateArray[1]) - 1;
-    dateArray[1] = `0${x.toString()}`;
+    dateArray[1] = `${x.toString()}`;
     dateArray[2] = "30";
     date = dateArray.join("-");
   }
@@ -258,9 +256,7 @@ function handlePrevDay() {
 
 //we fetch the data from the current date variable and pass it on to the renderData function for it to be displayed on the DOM
 function fetchDate(date) {
-  fetch(
-    `https://api.nasa.gov/planetary/apod?api_key=4ucYmBRjTLylUm0NrRpR5VCFPyetItgFep4hWuAh&date=${date}`
-  )
+  fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${date}`)
     .then((res) => res.json())
     .then((dateData) => renderData(dateData))
     .catch((error) => console.error(error.message));
@@ -272,7 +268,7 @@ function tomorrow() {
   notFound.removeAttribute("hidden"); //removes the hidden attribute to show the content on the DOM
   nextDay.setAttribute("disabled", true); //we disable the next button to prevent the user from going forward further
   backgroundImage.style.backgroundImage = "";
-  document.body.style.backgroundColor = "darkgrey";
+  document.body.style.backgroundColor = "aquamarine";
   title.innerText = "";
   dateHeader.innerText = "";
   explanationContainer.setAttribute("hidden", true);
