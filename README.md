@@ -17,6 +17,7 @@ You need an API key for the program to work
 
 Installation Requirements
 Git
+API Key
 
 Installation instruction
 Git clone https://github.com/levit3/APOD
