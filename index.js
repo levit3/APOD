@@ -57,6 +57,7 @@ function renderData(data) {
   image.style.maxHeight = "73%";
 
   //we style the body so that it has the image as the background image and ensure it is blurred
+  document.body.style.backgroundColor = "" //we remove any prior background color
   backgroundImage.style.backgroundImage = `url(${data.url})`;
   backgroundImage.style.position = "absolute";
   backgroundImage.style.top = "0"; //ensure the image is pinned to the top
@@ -268,7 +269,7 @@ function tomorrow() {
   notFound.removeAttribute("hidden"); //removes the hidden attribute to show the content on the DOM
   nextDay.setAttribute("disabled", true); //we disable the next button to prevent the user from going forward further
   backgroundImage.style.backgroundImage = "";
-  document.body.style.backgroundColor = "aquamarine";
+  document.body.style.backgroundColor = "lavender";
   title.innerText = "";
   dateHeader.innerText = "";
   explanationContainer.setAttribute("hidden", true);
